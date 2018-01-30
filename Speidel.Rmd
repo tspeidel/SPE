@@ -435,23 +435,27 @@ ggplot(b.sample, aes(helium.porosity)) +
 Show all pairwise combinations. Here, I've cheated by removing a few outliers.
 
 
-```{r, results='markup', fig.height = 3.2, fig.width = 7, cache = TRUE, dev="svglite"}
+```{r, results='markup', fig.align="center", fig.height = 10, fig.width = 10, out.width="500px", out.height="500px", dev="svglite"}
 blasingame <- blasingame %>%
      filter(kmax < 100) %>%
      filter(gdens > 0.5) %>%
      as.data.frame() %>%
      mutate(well = as.factor(well))
 
-ggpairs(blasingame,
-        columns = c(2, 4, 5, 6, 7, 9), 
-        title = "",
-        axisLabels = "show",
-        lower = list(continuous = wrap("points", alpha = 0.2, size=0.2))) +
-     theme_minimal(base_family = "Roboto Condensed") +
-     theme(axis.text.x = element_text(size = 5, family = "Roboto Condensed")) +
-     theme(axis.text.y = element_text(size = 5, family = "Roboto Condensed")) +
-     theme(strip.text.x = element_text(size = 6)) +
-     theme(strip.text.y = element_text(size = 6))
+# ggpairs(sample_n(blasingame, 100),
+#         columns = c(2, 4, 5, 6, 7, 9), 
+#         title = "",
+#         axisLabels = "show",
+#         lower = list(continuous = wrap("points", alpha = 0.2, size=0.2))) +
+#      theme_minimal(base_family = "Roboto Condensed") +
+#      theme(axis.text.x = element_text(size = 5, family = "Roboto Condensed")) +
+#      theme(axis.text.y = element_text(size = 5, family = "Roboto Condensed")) +
+#      theme(strip.text.x = element_text(size = 6)) +
+#      theme(strip.text.y = element_text(size = 6))
+
+
+library(car)
+scatterplot.matrix(~depth + helium.porosity + gdens + k90 + kmax, data=blasingame)
 
 ```
 
@@ -848,6 +852,22 @@ A reader is more likely to be confused by a 3D graph than a plain graph.
 ![](Figures/3d.png)
 ]
 
+
+---
+# Small Multiples
+
+A series of very similar graphs where the eye is drawn on comparing differences among them.
+
+<img src="Figures/small_multiple.png" width="660px">
+
+
+
+
+<small>
+*(1) Source <a href="http://thedailyviz.com/2016/12/14/four-decades-of-state-unemployment-rates-in-small-multiples-part-2/"> <i class="fa fa-external-link"></i></a>*
+</small>
+
+
 ---
 
 class: center, middle
@@ -869,6 +889,13 @@ class: middle
 class: inverse, center, middle
 
 # 5. References
+
+---
+
+class: center, middle
+
+<img src="Figures/books.png" width="1000px">
+
 
 ---
 
