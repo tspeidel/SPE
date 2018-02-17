@@ -2,7 +2,7 @@
 title: "Visualizations in the Analysis Workflow"
 subtitle: "SPE "
 author: "**Thomas Speidel**, P.Stat., Data Scientist"
-date: "<br>2016/12/12 <br> A copy of this presentation is available on GitHub:<br>http://"
+date: "<br>2016/12/12 <br> A copy of this presentation is available on GitHub: https://github.com/tspeidel/SPE <br> Views are my own."
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -72,6 +72,11 @@ library(kableExtra)
 library(forcats)
 library(patchwork)
 library(GGally)
+library(htmltools)
+library(ggmap)
+library(lubridate)
+library(htmlwidgets)
+library(leaflet)
 
 
 ## Fonts
@@ -95,7 +100,9 @@ class: inverse
 
 4.   Tips & Best Practices
 
-5.   References
+5.  What to Look for in Visualization Tools? An Opinionated List
+
+6.   References
 
 
 ---
@@ -657,7 +664,7 @@ print(f1, digits=3, long=FALSE, table = FALSE, conf.int=TRUE)
 
 <br>
 
-```{r, results='markup', fig.height=5.5, fig.width=14, dev = "svglite"}
+```{r, results='markup', fig.height=5.5, fig.width=14}
 ggplot(Predict(f1, fun = bar),
        anova = an, 
        pval = TRUE,
@@ -772,6 +779,93 @@ ggplot(blasingame, aes(x = helium.porosity, y = k90)) +
 
 ---
 
+# Use (and abuse) Smoothers
+
+```{r}
+# ## Via David Robinson http://varianceexplained.org/files/loess.html
+# library(lattice)
+# library(broom)
+# library(gganimate)
+# 
+# theme_set(theme_bw(base_family = "Roboto Condensed", base_size = 15))
+# 
+# mod <- loess(NOx ~ E, ethanol, degree = 1, span = .75)
+# fit <- augment(mod)
+# dat <- ethanol %>%
+#   inflate(center = unique(ethanol$E)) %>%
+#   mutate(dist = abs(E - center)) %>%
+#   filter(rank(dist) / n() <= .75) %>%
+#   mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3)
+# 
+# spans <- c(.25, .5, .75, 1)
+# 
+# # create loess fits, one for each span
+# fits <- data_frame(span = spans) %>%
+#   group_by(span) %>%
+#   do(augment(loess(NOx ~ E, ethanol, degree = 1, span = .$span)))
+# 
+# # calculate weights to reproduce this with local weighted fits
+# dat <- ethanol %>%
+#   inflate(span = spans, center = unique(ethanol$E)) %>%
+#   mutate(dist = abs(E - center)) %>%
+#   filter(rank(dist) / n() <= span) %>%
+#   mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3)
+# 
+# # create faceted plot with changing points, local linear fits, and vertical lines,
+# # and constant hollow points and loess fit
+# p <- ggplot(dat, aes(E, NOx)) +
+#   geom_point(aes(alpha = weight, frame = center)) +
+#   geom_smooth(aes(group = center, frame = center, weight = weight), method = "lm", se = FALSE) +
+#   geom_vline(aes(xintercept = center, frame = center), lty = 2) +
+#   geom_point(shape = 1, data = ethanol, alpha = .25) +
+#   geom_line(aes(y = .fitted, frame = E, cumulative = TRUE), data = fits, color = "red") +
+#   facet_wrap(~span) +
+#   ylim(0, 5) +
+#   ggtitle("x0 = ") +
+#   theme_light(base_family = "Roboto Condensed", base_size = 26)
+# 
+# 
+# library(animation)
+# animation::ani.options(ani.width = 1400, ani.height = 900, ani.res = 300)
+# gganimate(p, filename = "loess.mp4", interval=0.2)
+
+
+g <- ggplot(blasingame, aes(helium.porosity, kmax)) + 
+  scale_y_log10() +
+  scale_x_log10() +
+  geom_point(alpha = 0.2, size = 4) +
+  geom_smooth(color = "firebrick")  +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 28)
+
+ggsave("Figures/loess.svg", width = 12, height = 6)
+
+```
+
+.pull-left[
+Smoothers are increadibly useful in order to highlight possible **trends** in the data. One of the most popular and flexible smoother is Cleveland's [**LOESS**](https://en.wikipedia.org/wiki/Local_regression) (locally weighted least squares method).
+
+<small>
+
+* Non-linear
+* Built-in outlier control
+* Can control degree of smothness
+* Works well even when one of the variables is binary
+
+</small>
+
+<img src="Figures/loess.svg" height="250px">
+
+]
+
+.pull-right[
+
+<iframe width="492" height="316" src="loess.mp4" frameborder="0" allowfullscreen></iframe> 
+
+]
+
+
+---
+
 # Data-to-Ink Ratio
 
 .pull-left[
@@ -821,8 +915,10 @@ Use bar charts or dot plots.
 ]
 
 .pull-left[
-<img src="Figures/cleveland1984.png" width="300px">
+<img src="Figures/cleveland1984.png" width="320px">
 ]
+
+<br>
 
 <small>
 *(1) Cleveland and McGill, 1984 <a href="http://info.slis.indiana.edu/~katy/S637-S11/cleveland84.pdf"> <i class="fa fa-external-link"></i></a> and Heer and Bostok, 2010* <a href="http://vis.stanford.edu/files/2010-MTurk-CHI.pdf"> <i class="fa fa-external-link"></i></a>
@@ -852,6 +948,54 @@ A reader is more likely to be confused by a 3D graph than a plain graph.
 ![](Figures/3d.png)
 ]
 
+---
+class: center, middle
+
+<img src="Figures/choosing-a-good-chart1.png" width="880px">
+
+
+---
+class: inverse, center, middle
+
+```{r, results='markup', cache = TRUE}
+##----------------------------------------------------------------------------------------------------------------------
+## PREPARED DATA
+##----------------------------------------------------------------------------------------------------------------------
+load("Data/lochistory.RData")
+
+##----------------------------------------------------------------------------------------------------------------------
+## FILTER
+##----------------------------------------------------------------------------------------------------------------------
+loc.2016 <- loc %>%
+  mutate(year = year(time),
+         month = month(time)) %>%
+  filter(year==2016) %>%
+  filter(month %in% c(4, 6, 8)) %>%
+  arrange(time) %>%
+  dplyr::select(time, lat, lon, activitys, velocity, altitude, heading)
+
+##----------------------------------------------------------------------------------------------------------------------
+## VELOCITY
+##----------------------------------------------------------------------------------------------------------------------
+loc.2016.velocity <- filter(loc.2016, !is.na(velocity))
+loc.2016.velocity <- mutate(loc.2016.velocity, velocity.ln = log(velocity))
+loc.2016.velocity <- mutate(loc.2016.velocity, velocity.p = as.factor(ntile(velocity, 10)))
+
+pal <- colorFactor(c("RdPu"), loc.2016.velocity$velocity.p)
+
+leaflet(data = loc.2016.velocity) %>%
+  setView(lng = -114.062019, lat = 51.044270, zoom = 10) %>%
+  addProviderTiles("CartoDB.DarkMatter") %>%
+  addProviderTiles("OpenMapSurfer.AdminBounds") %>%
+  addCircleMarkers(
+    radius = 6,
+    color = ~pal(velocity.p),
+    stroke = FALSE, fillOpacity = 0.8
+  ) %>%
+  addLegend(pal = pal, values = ~velocity.p, title = "Velocity (ranks) | Low to High", opacity = 0.9)
+
+```
+
 
 ---
 # Small Multiples
@@ -869,10 +1013,98 @@ A series of very similar graphs where the eye is drawn on comparing differences 
 
 
 ---
+# Should We Anthropomorphize Visualizations?
 
-class: center, middle
+*...to attribute human form or personality to things not human*
 
-<img src="Figures/choosing-a-good-chart1.png" width="850px">
+<br>
+
+.pull-left[
+In 2017, Boy et al. (1) conducted visual experiments on 284 particpants. They found no evidence that anthropomorphizing visualizations has benefits on empathy.
+]
+
+.pull-right[
+<img src="Figures/anthro.png" width="300px">
+]
+
+<br><br>
+
+<small>
+*(1) Boy J. et al. Showing People Behind Data: Does Anthropomorphizing Visualizations Elicit More Empathy for Human Rights Data?* <a href="https://dl.acm.org/citation.cfm?doid=3025453.3025512"> <i class="fa fa-external-link"></i></a>
+</small>
+
+---
+
+class: inverse, center, middle
+
+# 5. What to Look for in Visualization Tools? An Opinionated List
+
+---
+
+# What to Look for in Visualization Tools? An Opinionated List
+
+Goal 1: *to identify, highlight features or relationships*  
+Goal 2: *to summarize, communicate and engage (telling a story)*
+
+
+<small><small>
+
+| Evaluation Item                       	| Notes                                                                                                                                       	|
+|---------------------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------	|
+| Who is it for?                        	| Identify the users and consumers. Likely 2-3 streams.                                                                                       	|
+| Goal 1 or goal 2?                     	| Data visualization vs. visual storytelling                                                                                                  	|
+| No one size fits all                  	| General purpose vs. special purpose                                                                                                         	|
+| Data preparation approach             	| Visual composition framework                                                                                                                	|
+| Data preparation capabilities         	| Joins, filter, aggregate, sample, rank, reshape, append, grouping, text extraction, logical operators, mathematical expressions             	|
+| Handling of dates and times           	| Human readable and adherence to ISO standards.                                                                                              	|
+| Time series data preparation          	| Rolling windows, date padding, durations, rolling statistics, smart aggregations                                                            	|
+| Breadth of statistics for aggregation 	| Mean, percentiles, ranks, min/max, counts, totals, conditional statistics, proportions, duration, harmonic mean, geometric mean, sd, IQR... 	|
+| Missing values                        	| Appropriate handling/warning of missing data                                                                                                	|
+| Ability to show uncertainty           	| Confidence bands, error bars, rangeplots                                                                                                    	|
+| General purpose smoothers             	| LOESS, exponential smoothing                                                                                                                	|
+| Quality of visualizations             	| Avoids or encourage chartjunk                                                                                                               	|
+| Breadth of visualizations             	| Standard graphs and modern graphs (e.g. ridgeline plots, violin plots, circular migration plots, word clouds)                               	|                             	|                                                     	|
+
+</small></small>
+
+---
+# What to Look for in Visualization Tools? An Opinionated List
+
+<small><small>
+
+| Evaluation Item 	| Notes                                                                                     	|
+|-----------------	|-------------------------------------------------------------------------------------------	|
+| Learning curve  	| Effort and time                                                                           	|
+| Community size  	| Extremely important! Forum, discussion boards, conferences, books, blogs, YouTube, MOOC's 	|
+| Extensibility   	| Community contribute added features                                                       	|
+| Extensibility   	| Play nice with R, Python?                                                                 	|
+| Connectivity    	| Beyond common connections. E.g. API's Bloomberg, weather, social media                    	|
+
+</small></small>
+
+Don't over-rely on IT advisory and consulting firms.
+
+When evaluating tools, **weighting** and **scoring** tend to be arbitrary and subjective. Scales are also arbitrary with little scientific basis. This usually results in poor choices. Weights are easy to manipulate in order to favour one tool over another. The resulting scoring matrices can be "*worse than useless, leading to worse-than-random decisions*"(1).
+
+Favour a **thorough qualitative evaluation**, ideally from a **pilot** rather than a pseudo-scientific scoring matrix. 
+
+
+<small>
+.footnote[[1] *Cox LA Jr. What's wrong with risk matrices? Risk Anal. 2008 Apr <a href="https://www.ncbi.nlm.nih.gov/pubmed/18419665"> <i class="fa fa-external-link"></i></a>*] 
+</small>
+---
+
+# What to Look for in Visualization Tools? An Opnionated List
+Remember Tufte: *Numbers become evidence by being in relation to*. Does the tool encourage comparisons? Does it make it easy?
+
+A simple test: I could not create a similar graph in a popular visualization tool:
+
+```{r, results='markup', fig.height=5, fig.width=12}
+ggplot(mpg, aes(class, hwy)) +
+  geom_boxplot(fill = "grey90") +
+  theme_minimal(base_family = "Roboto Condensed")
+
+```
 
 
 ---
@@ -888,7 +1120,7 @@ class: middle
 
 class: inverse, center, middle
 
-# 5. References
+# 6. References
 
 ---
 
