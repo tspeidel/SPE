@@ -7,7 +7,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      ratio: 16:9
+      ratio: '16:9'
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -104,6 +104,13 @@ class: inverse
 
 6.   References
 
+---
+
+# Data Manifesto
+
+Data, in an by themselves, do not directly create knowledge. While efforts to collect and store data have increased dramatically in recent years, nearly absent is a focus on knowledge creation.  In the age of Big Data, the availability of vast amounts of information can coexist with the **absence of knowledge**. 
+
+**Data cannot speak for themselves**.  It is in when we interpret data that knowledge is created. My focus is on **bridging the gap between data and knowledge creation**. That gap is filled by analytics and evidence based decision making.
 
 ---
 
@@ -162,7 +169,6 @@ We **cannot** achieve both effectiviely at the same time!
 # To Remember or to Understand?
 
 It is possible to achieve both **if**: (1):
-
 1.  Titles and supporting text should convey the message of a visualization 
 
 2.  If used appropriately, **pictograms** do not interfere with understanding and can improve recognition
