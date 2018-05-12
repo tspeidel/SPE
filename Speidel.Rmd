@@ -22,11 +22,11 @@ output:
 ##------------------------------------------------------------------------------------------------------------
 ## Set common options
 ##------------------------------------------------------------------------------------------------------------
-options(htmltools.dir.version = FALSE)
-
 ## Invalidate cache when the package version changes
 options(htmltools.dir.version = FALSE)
 
+
+## Global options
 knitr::opts_chunk$set(echo = FALSE, 
                       warning = FALSE, 
                       message = FALSE, 
@@ -78,7 +78,6 @@ library(lubridate)
 library(htmlwidgets)
 library(leaflet)
 
-
 ## Fonts
 # font_import(pattern="[R/r]oboto")
 # loadfonts(device="win")
@@ -100,7 +99,7 @@ class: inverse
 
 4.   Tips & Best Practices
 
-5.  What to Look for in Visualization Tools? An Opinionated List
+5.   What to Look for in Visualization Tools? An Opinionated List
 
 6.   References
 
@@ -223,29 +222,29 @@ blasingame <- blasingame %>%
      mutate(program = as.factor(program))
 
 # Add labels
-blasingame <- upData(blasingame,
-              labels = c(well = 'Well ID',
-                         depth = 'Depth',
-                         helium.porosity = "Helium Porosity",
-                         gdens = "Density",
-                         kmax = "Kmax Permeability",
-                         k90 = "K90 Permeability",
-                         rtype = "Rock Type"
-                         ),
-              units = c(depth = "ft",
-                        helium.porosity = "%",
-                        gdens = "g/cm3",
-                        kmax = "md",
-                        k90 = "md",
-                        gr = "API",
-                        rhob = "g/cm3",
-                        pe = "b/e",
-                        nphils = "dec",
-                        lld = "Ohm",
-                        lls = "Ohm"),
-              moveUnits = TRUE,
-              html = FALSE,
-              print = FALSE)
+# blasingame <- upData(blasingame,
+#               labels = c(well = 'Well ID',
+#                          depth = 'Depth',
+#                          helium.porosity = "Helium Porosity",
+#                          gdens = "Density",
+#                          kmax = "Kmax Permeability",
+#                          k90 = "K90 Permeability",
+#                          rtype = "Rock Type"
+#                          ),
+#               units = c(depth = "ft",
+#                         helium.porosity = "%",
+#                         gdens = "g/cm3",
+#                         kmax = "md",
+#                         k90 = "md",
+#                         gr = "API",
+#                         rhob = "g/cm3",
+#                         pe = "b/e",
+#                         nphils = "dec",
+#                         lld = "Ohm",
+#                         lls = "Ohm"),
+#               moveUnits = TRUE,
+#               html = FALSE,
+#               print = FALSE)
 
 
 ## Sample
@@ -424,6 +423,26 @@ html(s, caption='Baseline characteristics by rock type',
 </small>
 </small>
 </small>
+
+---
+# Combining Tables with Graphs
+
+
+```{r}
+## See: https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
+library(DT)
+library(sparkline)
+
+d4 <- datatable(blasingame, 
+                rownames = FALSE, 
+                options = list(columnDefs = colDefs2,
+                               fnDrawCallback = cb_box2))
+
+d4$dependencies <- append(d4$dependencies, htmlwidgets:::getDependency("sparkline"))
+d4
+
+
+```
 
 
 ---
@@ -735,6 +754,40 @@ bplot(p,
 
 
 ```
+
+---
+
+```{r}
+library(ggfortify)
+library(spca)
+
+blasingame <- mutate(blasingame, well = as.factor(well))
+
+pc <- blasingame %>%
+  select(gr, rhob, pe, nphils, lld, lls)
+
+## Use Sparse PC
+sparse.pca <- spca(pc, K = 2, type = "predictor", sparse = "varnum", para = c(4, 4))
+sparse.pca <- spcabe(pc, nd = 4, thresh = 0.25, unc = FALSE)
+data(pitprops)
+
+pc <- spca(x = pc, K = 5, type = "predictor", sparse = "varnum", para = c(5, 5, 5, 5, 5), trace = FALSE)
+
+
+autoplot(prcomp(pc, scale = TRUE), 
+         data = blasingame, 
+         colour = blasingame$well,
+         loadings = TRUE, 
+         loadings.colour = 'black',
+         loadings.label = TRUE, 
+         loadings.label.size = 5) + 
+  scale_fill_viridis() +
+  theme_minimal(base_family = "Roboto Condensed")
+
+
+
+```
+
 
 ---
 
