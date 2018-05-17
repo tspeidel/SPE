@@ -2,7 +2,7 @@
 title: "Visualizations in the Analysis Workflow"
 subtitle: "SPE "
 author: "**Thomas Speidel**, P.Stat., Data Scientist"
-date: "<br>2016/12/12 <br> A copy of this presentation is available on GitHub: https://github.com/tspeidel/SPE <br> Views are my own."
+date: "<br>2018/04/17 <br> A copy of this presentation is available on GitHub: https://github.com/tspeidel/SPE <br> Views are my own."
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -93,29 +93,61 @@ class: inverse
 
 1.   Visualizations: Objectives and Constraints
 
-2.   Univariate Visualizations
+2.   Visualizations for Data Storytelling
 
-3.   Bivariate Visualizations
+3.   Univariate Visualizations
 
-4.   Tips & Best Practices
+4.   Bivariate Visualizations
 
-5.   What to Look for in Visualization Tools? An Opinionated List
+5.   Visualizing Models
 
-6.   References
+6.   Tips & Best Practices
+
+7.   What to Look for in Visualization Tools? An Opinionated List
+
+8.   References
 
 ---
 
 # Data Manifesto
 
-Data, in an by themselves, do not directly create knowledge. While efforts to collect and store data have increased dramatically in recent years, nearly absent is a focus on knowledge creation.  In the age of Big Data, the availability of vast amounts of information can coexist with the **absence of knowledge**. 
+Data, in an by themselves, do not directly create knowledge. While efforts to collect and store data have increased dramatically in recent years, nearly absent is a focus on knowledge creation.  In the age of **Big Data**, the availability of vast amounts of information can coexist with the **absence of knowledge**. 
 
-**Data cannot speak for themselves**.  It is in when we interpret data that knowledge is created. My focus is on **bridging the gap between data and knowledge creation**. That gap is filled by analytics and evidence based decision making.
+**Data cannot speak for themselves**.  It is in when we interpret data that knowledge is created. My focus is on **bridging the gap between data and knowledge creation**. That gap is filled by statistics and evidence based decision making.
 
 ---
 
 class: inverse, center, middle
 
 # 1. Visualizations: Objectives and Constraints
+
+---
+
+# Why Visualizations?
+
+> *At their best, graphics are instruments for reasoning about quantitative information (Tufte, 1983)*
+
+> *Graphs are exceptionally powerful tools for data analysis (Cleveland, 1985)*
+
+> *There is no statistical tool that is as powerful as a well-chosen graph (Chambers, 1983)*
+
+> *Diagrams prove nothing, but bring outstanding features readily to the eye (Fisher, 1925)*
+
+
+<br>
+
+--
+
+###Two broad objectives:
+
+* **Communication**: display a convincing pattern, attract reader's attention (first goal)
+
+* **Discovery**: observe deviations from our expectations (second goal)
+
+
+<small>
+.footnote[[1] *Gelman, Unwin. 2013 <a href="www.tandfonline.com/doi/abs/10.1080/10618600.2012.761137"> <i class="fa fa-external-link"></i></a>*]
+</small>
 
 ---
 
@@ -147,17 +179,23 @@ To identify, understand, highlight features or relationships (helping the reader
 
 We **cannot** achieve both effectiviely at the same time!
 
+<center>
+
+--
+
 .pull-left[
 ###To Persuade
 <img src="Figures/mayo.jpg" width="160px"> 
 ]
+
+--
 
 .pull-right[
 ###To Inform
 <img src="Figures/nutritional.png" width="160px"> 
 ]
 
-
+</center>
 
 <small>
 .footnote[[1] *Spiegelhalter, Pearson, Short. 2011 <a href="https://vcg.seas.harvard.edu/files/pfister/files/infovis_submission251-camera.pdf"> <i class="fa fa-external-link"></i></a>*] 
@@ -167,38 +205,32 @@ We **cannot** achieve both effectiviely at the same time!
 
 # To Remember or to Understand?
 
-It is possible to achieve both **if**: (1):
-1.  Titles and supporting text should convey the message of a visualization 
+.pull-left[
+Can we achieve memory **and** understanding at the same time?
+
+1.  **Titles and annotations** help convey the message of a visualization 
 
 2.  If used appropriately, **pictograms** do not interfere with understanding and can improve recognition
 
-3.  Redundancy helps effectively communicate the message 
+3.  **Redundancy** helps effectively communicate the message 
+]
 
-<div style="text-align:center"><img src="Figures/tufteweather.png" width="700px"></div>
+
+.pull-right[
+<div style="text-align:center"><img src="Figures/annotations.png" width="600px"></div>
+</small>
+]
 
 
 <small>
-.footnote[[1] *Borkin et al. 2015<a href="http://slides.yihui.name/xaringan/zh-CN.html"> <i class="fa fa-external-link"></i></a>*] 
+.footnote[ [1] *Borkin et al. 2015. Beyond Memorability: Visualization Recognition and Recall <a href="https://vcg.seas.harvard.edu/files/pfister/files/infovis_submission251-camera.pdf"> <i class="fa fa-external-link"></i></a>*
+
+[2] *Bob Rudis 2016. <a href="https://rud.is/b/2016/06/16/your-data-vis-spidey-sense-the-need-for-a-robust-utility-belt/"> <i class="fa fa-external-link"></i></a>*] 
 </small>
 
 ---
 
-class: inverse, center, middle
-
-<iframe width="647" height="546" src="Figures/nuclear.mp4" frameborder="0" allowfullscreen></iframe>
-
-<small>
-.footnote[[1] *Bob Rudis 2016<a href="https://rud.is/b/2016/03/26/nuclear-animations-in-r/"> <i class="fa fa-external-link"></i></a>*] 
-</small>
----
-
-class: inverse, center, middle
-
-# 2. Univariate Visualizations
-
----
-
-# Data
+# Example Dataset
 
 The dataset originates from Doublet (2001).
 
@@ -221,32 +253,6 @@ blasingame <- blasingame %>%
      mutate(rtype = as.factor(rtype)) %>%
      mutate(program = as.factor(program))
 
-# Add labels
-# blasingame <- upData(blasingame,
-#               labels = c(well = 'Well ID',
-#                          depth = 'Depth',
-#                          helium.porosity = "Helium Porosity",
-#                          gdens = "Density",
-#                          kmax = "Kmax Permeability",
-#                          k90 = "K90 Permeability",
-#                          rtype = "Rock Type"
-#                          ),
-#               units = c(depth = "ft",
-#                         helium.porosity = "%",
-#                         gdens = "g/cm3",
-#                         kmax = "md",
-#                         k90 = "md",
-#                         gr = "API",
-#                         rhob = "g/cm3",
-#                         pe = "b/e",
-#                         nphils = "dec",
-#                         lld = "Ohm",
-#                         lls = "Ohm"),
-#               moveUnits = TRUE,
-#               html = FALSE,
-#               print = FALSE)
-
-
 ## Sample
 # kable(blasingame[1:5, ])
 kable(blasingame[1:5, ], "html", align = "l") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
@@ -262,10 +268,11 @@ b.sample <- blasingame %>%
 
 ```
 
-.footnote[[2] *Thanks to D. Kaviani for pointing me to the data and for the preparatory work.*]
-
-.footnote[[1] *Doublet, L.E. (2001) An Integrated Geologic and Engineering Characterization of the North Robertson (Clear Fork) Unit, Gaines
-County, Texas. Petroleum Engineering PhD thesis, Texas A&amp;M University.*]
+.footnote[ 
+[1] *Thanks to D. Kaviani for pointing me to the data and for the preparatory work.*  
+[2] *Doublet, L.E. (2001) An Integrated Geologic and Engineering Characterization of the North Robertson (Clear Fork) Unit, Gaines
+County, Texas. Petroleum Engineering PhD thesis, Texas A&amp;M University.*
+]
 
 </small>
 
@@ -280,7 +287,7 @@ class: inverse
 
 As the analsys progresses we gradually build a more refined idea what we want to understand. Along this path we encounter many other **questions** that need answering, **problems** that need investigating and **ideas** that need exploring. You "*ask questions about whether your data meets your expectations or not*" (1). 
 
-We call this **exploratory data analysis** (EDA).  EDA makes abundant use of statistical graphics.
+We call this **[exploratory data analysis](https://en.wikipedia.org/wiki/Exploratory_data_analysis)** (EDA).  EDA makes abundant use of statistical graphics.
 
 >    *Graphs force us to note the unexpected; nothing could be more important.*  
 <small>
@@ -291,6 +298,54 @@ We call this **exploratory data analysis** (EDA).  EDA makes abundant use of sta
 .footnote[[1] *Grolemund, Wickham. R for Data Science, 2017 <a href="http://r4ds.had.co.nz/index.html"> <i class="fa fa-external-link"></i></a>*]
 </small>
 
+
+---
+
+class: inverse, center, middle
+
+# 2. Visualizations for Data Storytelling
+
+---
+
+# Telling a Story
+.pull-left[
+
+Display a convincing pattern, attract reader's attention
+]
+
+.pull-right[
+<center>
+<iframe width="470" height="405" src="Figures/booms.mp4" frameborder="0" allowfullscreen></iframe>
+</center>
+]
+
+<small>
+.footnote[[1] *Bob Rudis 2016<a href="https://rud.is/b/2016/03/26/nuclear-animations-in-r/"> <i class="fa fa-external-link"></i></a>*] 
+</small>
+
+---
+
+background-image: url(Figures/nyt1.png)
+background-size: cover
+
+<small>
+.footnote[[1] *New York Times. Mapping Poverty in America, 2014. <a href="http://www.nytimes.com/newsgraphics/2014/01/05/poverty-map/index.html/"> <i class="fa fa-external-link"></i></a>*] 
+</small>
+
+---
+
+background-image: url(Figures/lupi3.jpg)
+background-size: cover
+
+<small>
+.footnote[[1] *Giorgia Lupi. Nobels, No Degrees, 2012. <a href="https://www.behance.net/gallery/14159439/Nobel-no-degrees"> <i class="fa fa-external-link"></i></a>*] 
+</small>
+
+---
+
+class: inverse, center, middle
+
+# 3. Univariate Visualizations
 
 
 ---
@@ -374,9 +429,10 @@ p1 + p2 + p3 + p4 + p5 + p6
 
 class: inverse, center, middle
 
-# Bivariate 
+# 4. Bivariate Visualizations
 
 ---
+
 class: middle
 
 >    *Numbers become evidence by being in relation to.*  
@@ -394,12 +450,6 @@ class: middle
 
 ```{r, results='markup'}
 ## Data
-
-# dataMaid::check(blasingame) 
-# dataMaid::visualize(blasingame$helium.porosity)
-# xray::anomalies(blasingame)
-# xray::distributions(blasingame)
-
 options(grType='ggplot') # for certain graphics functions
 mu <- markupSpecs$html   # markupSpecs is in Hmisc
 cap  <- mu$cap           # function to output html caption
@@ -425,33 +475,27 @@ html(s, caption='Baseline characteristics by rock type',
 </small>
 
 ---
+
 # Combining Tables with Graphs
+<br>
 
+<center>
+<img src="Figures/tablegraph.png" width="700px">
+</center>
 
-```{r}
-## See: https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html
-library(DT)
-library(sparkline)
-
-d4 <- datatable(blasingame, 
-                rownames = FALSE, 
-                options = list(columnDefs = colDefs2,
-                               fnDrawCallback = cb_box2))
-
-d4$dependencies <- append(d4$dependencies, htmlwidgets:::getDependency("sparkline"))
-d4
-
-
-```
+<small>
+.footnote[
+[1] *Matthew Leonawicz <a href="https://leonawicz.github.io/HtmlWidgetExamples/ex_dt_sparkline.html"> <i class="fa fa-external-link"></i></a>*]
+</small>
 
 
 ---
 # Kernel Density
 
-Kernel density plots have the unique advantage that they are self-standardizing. This make **comparisons** across rock type easier.
+Kernel density plots have the unique advantage that they are self-standardizing. They are also more effective than histograms. This makes them useful to **compare distributions** when the units aren't the same (not here).
 
 
-```{r, results='markup', fig.height = 2.5, fig.width = 7, dev="svglite"}
+```{r, results='markup', fig.height = 2.5, fig.width = 7, dev="png"}
 ggplot(b.sample, aes(helium.porosity)) +
      geom_density(alpha = 0.6, fill = "grey40", color = "white") +
      scale_fill_viridis(option="viridis", discrete = TRUE) +
@@ -464,30 +508,28 @@ ggplot(b.sample, aes(helium.porosity)) +
 
 ---
 # Scatterplot Matrix or Cross Plot
-Show all pairwise combinations. Here, I've cheated by removing a few outliers.
+One of the very first plots you ant to make. Shows all pairwise combinations. Here, I've cheated by removing a few outliers.
 
 
-```{r, results='markup', fig.align="center", fig.height = 10, fig.width = 10, out.width="500px", out.height="500px", dev="svglite"}
+```{r, results='markup', fig.align="cenwter", fig.height = 6, fig.width = 15, out.width="1200px", out.height="450px", dev="png"}
 blasingame <- blasingame %>%
      filter(kmax < 100) %>%
      filter(gdens > 0.5) %>%
      as.data.frame() %>%
      mutate(well = as.factor(well))
 
-# ggpairs(sample_n(blasingame, 100),
-#         columns = c(2, 4, 5, 6, 7, 9), 
-#         title = "",
-#         axisLabels = "show",
-#         lower = list(continuous = wrap("points", alpha = 0.2, size=0.2))) +
-#      theme_minimal(base_family = "Roboto Condensed") +
-#      theme(axis.text.x = element_text(size = 5, family = "Roboto Condensed")) +
-#      theme(axis.text.y = element_text(size = 5, family = "Roboto Condensed")) +
-#      theme(strip.text.x = element_text(size = 6)) +
-#      theme(strip.text.y = element_text(size = 6))
+## May require dev version of ggpairs
+ggpairs(data   = blasingame,
+        columns= c(2,4:7),
+        upper  = list(continuous = "density"),
+        lower  = list(combo = "facetdensity"),
+        ggplot2::aes(colour=rtype, alpha = 0.1)) +
+     theme_minimal(base_family = "Roboto Condensed") +
+     theme(axis.text.x = element_text(size = 10, family = "Roboto Condensed")) +
+     theme(axis.text.y = element_text(size = 10, family = "Roboto Condensed")) +
+     theme(strip.text.x = element_text(size = 18)) +
+     theme(strip.text.y = element_text(size = 18))
 
-
-library(car)
-scatterplot.matrix(~depth + helium.porosity + gdens + k90 + kmax, data=blasingame)
 
 ```
 
@@ -496,20 +538,23 @@ scatterplot.matrix(~depth + helium.porosity + gdens + k90 + kmax, data=blasingam
 # Boxplots
 Here we *cut* (bin) `helium.porosity` into quartiles (P25, P50, P75). 
 
-```{r, results='markup', fig.height = 3.2, fig.width = 7, cache = TRUE, dev="svglite"}
+
+```{r, results='markup', fig.height = 3.2, fig.width = 7, cache = TRUE}
 g1 <- 
      ggplot(blasingame, aes(cut2(helium.porosity, g = 4), k90)) + 
-     geom_boxplot(outlier.alpha = 0.6, fill = "grey60") + 
+     geom_boxplot(outlier.alpha = 0.6, fill = "grey70",  lwd = 0.2) + 
      scale_fill_viridis(option="viridis", discrete = TRUE) +
-     theme_minimal(base_family = "Roboto Condensed")
+     theme_minimal(base_family = "Roboto Condensed") +
+     labs(x = "\nHelium Porosity")
 
 g2 <- 
      ggplot(blasingame, aes(cut2(helium.porosity, g = 4), k90)) + 
-     geom_boxplot(outlier.alpha = 0.6, fill = "grey60") + 
+     geom_boxplot(outlier.alpha = 0.6, fill = "grey70", lwd = 0.2) + 
      scale_fill_viridis(option="viridis", discrete = TRUE) +
      theme_minimal(base_family = "Roboto Condensed") +
      scale_y_log10() +
-     labs(y = "log(k90)")
+     annotation_logticks(sides = "l") +
+     labs(y = "log(k90)", x = "\nHelium Porosity")
 
 g1 + g2
 
@@ -518,7 +563,7 @@ g1 + g2
 ---
 # Scatterplots With 2 Variables
 
-```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "svglite"}
+```{r, results='markup', fig.align="center", fig.height = 6, fig.width = 15, out.width="1200px", out.height="450px", dev="png"}
 ggplot(blasingame, aes(x = helium.porosity, y = k90)) +
      geom_point(alpha = 0.5, shape = 19) +
      scale_y_log10() +
@@ -532,7 +577,7 @@ ggplot(blasingame, aes(x = helium.porosity, y = k90)) +
 ---
 # Scatterplots With 3 Variables
 
-```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "svglite"}
+```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "png"}
 ggplot(blasingame, aes(x = helium.porosity, y = k90, color = rtype)) +
      geom_point(alpha = 0.5, shape = 19) +
      scale_y_log10() +
@@ -545,7 +590,7 @@ ggplot(blasingame, aes(x = helium.porosity, y = k90, color = rtype)) +
 ---
 # Scatterplots With 4 Variables
 
-```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "svglite"}
+```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "png"}
 ggplot(blasingame, aes(x = helium.porosity, y = k90, color = rtype, size = depth)) +
      geom_point(alpha = 0.5, shape = 19) +
      scale_size_continuous(range = c(0.2, 2.4)) +
@@ -558,19 +603,12 @@ ggplot(blasingame, aes(x = helium.porosity, y = k90, color = rtype, size = depth
 
 
 
-
-
-<!-- Scatterplot matrix with color -->
-<!-- Correlation matrix -->
-<!-- Bar chart -->
-
-
 ---
 
 # Correlation Matrix
+A unitless measure of the strength of the association between pairs of variables.
 
-```{r, results='markup', fig.height = 3, fig.width = 6, dev = "svglite"}
-##Modeling for abstract
+```{r, results='markup', fig.align="center", fig.height = 6, fig.width = 15, out.width="1200px", out.height="450px", dev="png"}
 blasingame <- blasingame %>%
      filter(rtype !=7) %>%
      mutate(rtype = droplevels(rtype)) %>%
@@ -583,71 +621,41 @@ blasingame.clus <- blasingame %>%
      select(-well, -kmax.log, -k.ratio, -k.ratio.log, -program, -rtype) %>%
      na.delete()
 
-library(corrplot)
-correlations <- cor(blasingame.clus, method = "spearman")
-
-cor.mtest <- function(mat, ...) {
-    mat <- as.matrix(mat)
-    n <- ncol(mat)
-    p.mat<- matrix(NA, n, n)
-    diag(p.mat) <- 0
-    for (i in 1:(n - 1)) {
-        for (j in (i + 1):n) {
-            tmp <- cor.test(mat[, i], mat[, j], ...)
-            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
-        }
-    }
-  colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-  p.mat
-}
-
-par(fontfamily = 'Roboto Condensed')
-par(pin=c(3,6))
-p.mat <- cor.mtest(correlations)
-col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
-# corrplot(correlations, 
-#          method = "color", 
-#          col = col(200),  
-#          type = "upper",
-#          order = "hclust", 
-#          addCoef.col = "black",
-#          tl.col = "black", 
-#          tl.srt = 45,
-#          p.mat = p.mat, 
-#          sig.level = 0.05, 
-#          insig = "blank", 
-#          diag = FALSE,
-#          tl.cex = 0.6,
-#          cl.cex = 0.6,
-#          cl.pos = "n")
-
-
 ggcorr(blasingame.clus,
        method = c("pairwise", "spearman"),
        geom = "blank", 
        label = TRUE, 
        layout.exp = 4,
-       label_size = 1.3,
+       label_size = 4.5,
        hjust = 0.75,
-       size = 2,
+       size = 4.5,
        family = "Roboto Condensed") +
-     geom_point(size = 4, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+     geom_point(size = 10, aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
      scale_alpha_manual(values = c("TRUE" = 0.25, "FALSE" = 0)) +
      guides(color = FALSE, alpha = FALSE) 
 
 
 ```
 
+
 ---
 
+class: inverse, center, middle
+
+# 5. Visualizing Models
+
+---
+
+
 # Graphs for Models
-It's much easier to interpret a model by graphing it! Compare this:
+It's much easier to interpret a model by graphing it! Here's a regression model of `k.ratio` on several variables. Compare this:
 
 <small><small><small>
+.pull-left[
 
-```{r, results='markup', fig.height=5.5, fig.width=14, dev = "svglite"}
+```{r, results='markup', fig.height=5.5, fig.width=14, dev = "png"}
 dd <- datadist (blasingame); options(datadist = 'dd')
-f1 <- orm(k.ratio ~  rcs(helium.porosity, 4) + rcs(pe, 3) + rcs(nphils, 3) + rcs(depth, 3) + rtype, 
+f1 <- orm(k.ratio ~  rcs(helium.porosity, 4) + rcs(pe, 3) + nphils + rtype, 
          family = "logistic",
          data = blasingame,
          scale = TRUE,
@@ -662,25 +670,13 @@ p50 <- function(x) qu(0.50, x)
 p25 <- function(x) qu(0.25, x)
 p75 <- function(x) qu(0.75, x)
 
-# ggplot(Predict(f1, helium.porosity, fun = bar),
-#        rdata = blasingame,
-#        histSpike.opts = list(frac = function(helium.porosity) 0.1*helium.porosity/max(helium.porosity)),         
-#        anova = an, 
-#        pval = TRUE,
-#        colfill = "gray50",
-#        adj.subtitle = TRUE,
-#        addlayer =           
-#           theme_minimal(base_size = 18, base_family = "Roboto Condensed") +
-#           labs(y = "k ratio",
-#                x = "Helium Porosity",
-#                title = "Effect of Helium Porosity\non median k-ratio")
-#        )
-
 options(prType='html')
-print(f1, digits=3, long=FALSE, table = FALSE, conf.int=TRUE)
+# print(f1, digits=3, long=FALSE, table = FALSE, conf.int=TRUE)
+print(summary(f1))
 
 ```
 
+]
 </small></small></small>
 
 ---
@@ -689,17 +685,22 @@ print(f1, digits=3, long=FALSE, table = FALSE, conf.int=TRUE)
 
 <br>
 
-```{r, results='markup', fig.height=5.5, fig.width=14}
-ggplot(Predict(f1, fun = bar),
+<center>
+
+```{r, results='markup', fig.align="center", fig.height = 6, fig.width = 15}
+ggplot(rms::Predict(f1, fun = bar),
        anova = an, 
        pval = TRUE,
        layout = c(1, 5),
        colfill = "gray50",
        adj.subtitle = TRUE,
        addlayer =           
-          theme_minimal(base_size = 14, base_family = "Roboto Condensed")
+          theme_minimal(base_size = 14, base_family = "Roboto Condensed") +
+         labs(y = "Predicted k.ratio")
        )
 ```
+
+</center>
 
 ---
 
@@ -707,10 +708,12 @@ ggplot(Predict(f1, fun = bar),
 
 <br>
 
-```{r, results='markup', fig.height=6.5, fig.width=10, out.width="700px", out.height="400px",  dev = "png", fig.cap = "<small><small>Non-linear regression model showing the simultaneous effect, on the dependent variable permeability ratio (Kmax/k90), of changing two continuous variables (helium porosity and photoelectric capture cross-section log) while holding (marginalizing) all other variables fixed at their median.</small></small>"}
-p <- Predict(f1, helium.porosity, pe, rtype, np = 100, fun = p50)
+<center>
 
-par(fontfamily = 'Roboto Condensed')
+```{r, results='markup', fig.height=6.5, fig.width=10, out.width="700px", out.height="400px",  dev = "png", fig.cap = "<small><small>Non-linear regression model showing the simultaneous effect, on the dependent variable permeability ratio (Kmax/k90), of changing two continuous variables (helium porosity and photoelectric capture cross-section log) while holding (marginalizing) all other variables fixed at their median.</small></small>"}
+p <- rms::Predict(f1, helium.porosity, pe, rtype, np = 100, fun = p50)
+
+par(family = 'Roboto Condensed')
 trellis.par.set(list(axis.text = list(fontfamily = "Roboto Condensed", cex = 0.9), par.strip.text = list(fontfamily = "Roboto Condensed")))
 
 bplot(p,
@@ -722,7 +725,7 @@ bplot(p,
       scales = list(tck = c(1,0),
                     x = list(cex = 1, fontfamily = "Roboto Condensed"),
                     y = list(cex = 1, fontfamily = "Roboto Condensed")),
-      par.settings = list(fontsize = list(text = 12, fontfamily = "Roboto Condensed"),
+      par.settings = list(fontsize = list(text = 12, family = "Roboto Condensed"),
                           grid.pars = list(fontfamily = "Roboto Condensed"),
                           strip.background = list(col = "gray85"),
                           layout.heights = list(strip = 1.6),
@@ -755,45 +758,147 @@ bplot(p,
 
 ```
 
+</center>
+
 ---
 
-```{r}
-library(ggfortify)
-library(spca)
+background-image: url(Figures/malaysia.gif)
+background-size: cover
 
+<small>
+.footnote[[1] *New York Times. How Missing Jet’s Debris Could Have Floated to Réunion, 2015. <a href="https://www.nytimes.com/interactive/2014/03/17/world/asia/search-for-flight-370.html"> <i class="fa fa-external-link"></i></a>*] 
+</small>
+
+---
+
+# Visualizing Principal Components
+Principal components allow us to describe our data with fewer new variables. These new variables are linear combinations of multiple variables. We call these new variables principal components.
+
+
+
+```{r, results='markup'}
 blasingame <- mutate(blasingame, well = as.factor(well))
 
-pc <- blasingame %>%
-  select(gr, rhob, pe, nphils, lld, lls)
-
 ## Use Sparse PC
-sparse.pca <- spca(pc, K = 2, type = "predictor", sparse = "varnum", para = c(4, 4))
-sparse.pca <- spcabe(pc, nd = 4, thresh = 0.25, unc = FALSE)
-data(pitprops)
+library(ggbiplot)
+(pc <- prcomp(select(blasingame, gr, rhob, pe, nphils, lld, lls), scale. = TRUE, center = TRUE))
+```
 
-pc <- spca(x = pc, K = 5, type = "predictor", sparse = "varnum", para = c(5, 5, 5, 5, 5), trace = FALSE)
+---
 
+# Visualizing Principal Components
 
-autoplot(prcomp(pc, scale = TRUE), 
-         data = blasingame, 
-         colour = blasingame$well,
-         loadings = TRUE, 
-         loadings.colour = 'black',
-         loadings.label = TRUE, 
-         loadings.label.size = 5) + 
-  scale_fill_viridis() +
-  theme_minimal(base_family = "Roboto Condensed")
-
-
+```{r, results='markup', fig.align="center", fig.height = 8, fig.width = 15}
+ggbiplot(pc, 
+         obs.scale = 1, 
+         var.scale = 1,
+         ellipse = TRUE, 
+         circle = FALSE,
+         alpha = 0,
+         varname.size = 4.5, 
+         labels.size = 6) +
+  geom_point(aes(colour =  blasingame$rtype), size = 2.6, alpha = 0.5) +
+  # geom_text(aes(label = rownames(hunt)), hjust = 0, vjust = 0, size = 4) +  
+  scale_color_viridis_d(direction = -1) +
+  labs(colour = "Rock Type") +
+  theme_minimal(base_family = "Raleway", base_size = 14) + 
+  theme(legend.position="right") + 
+  theme(panel.background = element_rect(fill = "#FCFCFC", colour = NA), plot.background = element_rect(fill = "#FCFCFC", colour = NA)) +
+  geom_vline(xintercept = 0, color = "grey10", size = 0.2) +
+  geom_hline(yintercept = 0, color = "grey10", size = 0.2)
 
 ```
 
+---
+
+# Visualizing CART Models
+CART stands for **Classification and Regression Trees** a non-parametric type of model. Hypothetically, let's fit a model to predict rock type using `depth` and `helium.porosity` and visualize the results:
+
+```{r, results='markup', fig.align="center", fig.height = 6.5, fig.width = 14.5}
+library(partykit)
+rocks <- ctree(rtype ~ depth + helium.porosity + k90, data = blasingame)
+plot(rocks, gp = gpar(fontfamily = 'Roboto Condensed'))
+
+```
 
 ---
 
+# Visually Comparing Multiple Models
+
+```{r, results='markup', fig.align="center", fig.height = 6, fig.width = 8, out.width="600px", out.height="500px", cache = TRUE}
+library(caret)
+library(doMC)
+doMC::registerDoMC(cores = 6)
+
+train_log <- createDataPartition(blasingame$rtype, times = 1, p=0.75, list=F)
+preProc <-c("BoxCox", "center","scale")
+tctrl <- trainControl(method = "repeatedcv", 
+                      number=10, 
+                      repeats=10)
+
+f <- rtype ~ depth + helium.porosity + gdens + kmax + gr + rhob + lld
+
+set.seed(321)
+rpart_model <- train(f, blasingame, method="rpart",
+               preProcess = preProc,
+               metric = "Kappa",
+               trControl = tctrl,
+               subset = train_log)
+ 
+set.seed(321)
+rf_model <- train(f, blasingame, method="rf",
+                     preProcess = preProc,
+                     metric = "Kappa",
+                     trControl = tctrl,
+                     subset = train_log)
+
+set.seed(321)
+gbmFit1 <- train(f, blasingame, 
+                 preProcess = preProc,
+                 method = "gbm", 
+                 trControl = tctrl,
+                 verbose = FALSE)
+
+set.seed(321)
+rmdaFit1 <- train(f, blasingame, 
+                 preProcess = preProc,
+                 method = "pda", 
+                 trControl = tctrl,
+                 verbose = FALSE)
+
+set.seed(321)
+svm <- train(f, blasingame, 
+                 preProcess = preProc,
+                 method = "svmRadial", 
+                 trControl = tctrl,
+                 verbose = FALSE)
+
+allResamples <- resamples(list("SVM" = svm, "CART" = rpart_model, "Random Forest" = rf_model, "Gradient Boosting" = gbmFit1, "Penalized Discriminant Analysis" = rmdaFit1))
+parallelplot(allResamples)
+
+```
+
+---
+
+# Diagrams to Explain
+.pull-left[
+
+While not showing a model per-se, diagrams can help make unintuitive topics more transparent. Here, because of the low prevalence of drug consumption, we observe a high **false positive rate** (test says a person has consumed a drug, but in truth s/he has not), despite high test accuracy. 
+]
+
+.pull-right[
+<img src="Figures/ppv.png" width="700px">
+]
+
+<small>
+.footnote[[1] *Spiegelhalter et al. Visualizing Uncertainty About the Future. 2011 <a href="http://science.sciencemag.org/content/333/6048/1393"> <i class="fa fa-external-link"></i></a>*]
+</small>
+
+
+---
 class: inverse, center, middle
 
-# 4. Tips & Best Practices
+# 6. Tips & Best Practices
 
 ---
 
@@ -809,7 +914,7 @@ class: middle
 
 # General Graphing
 
-```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "svglite", eval=FALSE}
+```{r, results='markup', fig.height = 4.4, fig.width = 9, dev = "png", eval=FALSE}
 ggplot(blasingame, aes(x = helium.porosity, y = k90)) +
      geom_point(aes(color = rtype, size = depth), alpha = 0.5, shape = 19) +
      geom_smooth(size = 0.5, color = "grey40", alpha = 0.25, method = "loess") +
@@ -820,16 +925,17 @@ ggplot(blasingame, aes(x = helium.porosity, y = k90)) +
      theme_minimal(base_family = "Roboto Condensed")
 
 ```
-
-
-![](Figures/scatterplot.svg)
+<center>
+<img src="Figures/scatterplot.png" width="990px">
+</center>
 
 ---
 
 # Table Tips
 
-![](Figures/table2.svg)
-
+<center>
+<img src="Figures/table.png" width="990px">
+</center>
 
 <small>
 .footnote[[1] *Recreated from Ehrenberg, 1981 <a href="https://www.stat.washington.edu/pds/stat423/Documents/Ehrenberg.numeracy.pdf"> <i class="fa fa-external-link"></i></a>*]
@@ -901,13 +1007,13 @@ ggsave("Figures/loess.svg", width = 12, height = 6)
 ```
 
 .pull-left[
-Smoothers are increadibly useful in order to highlight possible **trends** in the data. One of the most popular and flexible smoother is Cleveland's [**LOESS**](https://en.wikipedia.org/wiki/Local_regression) (locally weighted least squares method).
+Smoothers are incredibly useful in order to highlight possible **trends** in the data. One of the most popular and flexible smoother is Cleveland's [**LOESS**](https://en.wikipedia.org/wiki/Local_regression) (locally weighted least squares method).
 
 <small>
 
 * Non-linear
 * Built-in outlier control
-* Can control degree of smothness
+* Can control degree of smoothness
 * Works well even when one of the variables is binary
 
 </small>
@@ -940,11 +1046,18 @@ All visual elements in charts and graphs that are not necessary to comprehend th
 Of all the ink used in a graph, the amount of ink that **transports information**.  We want this to be high. <small>(Tufte, 1983, 2006)</small>
 
 <br><br>
-
-<img src="Figures/challenger.svg" width="500px">
-
 ]
 
+---
+###Data-to-ink ratio
+
+<br>
+
+<img src="Figures/chellenger.png" width="1000px">
+
+<small>
+.footnote[[1] *Recreated from Tufte, 1983. Visual Explanations: Images and Quantities, Evidence and Narrative <a href="https://www.stat.washington.edu/pds/stat423/Documents/Ehrenberg.numeracy.pdf"> <i class="fa fa-external-link"></i></a>*]
+</small>
 
 ---
 
@@ -968,22 +1081,20 @@ Use bar charts or dot plots.
 
 ---
 # The Type of Chart Affects Visual Judgement
-
-.pull-left[
-<img src="Figures/cleveland.png" width="340px">
-]
-
-.pull-left[
-<img src="Figures/cleveland1984.png" width="320px">
-]
+Experiments performed to quantify visual judgment of graphs: 25 years later, results have not changed.
 
 <br>
 
+<center>
+<img src="Figures/cleveland.png" width="1000px">
+</center>
+
+
 <small>
-*(1) Cleveland and McGill, 1984 <a href="http://info.slis.indiana.edu/~katy/S637-S11/cleveland84.pdf"> <i class="fa fa-external-link"></i></a> and Heer and Bostok, 2010* <a href="http://vis.stanford.edu/files/2010-MTurk-CHI.pdf"> <i class="fa fa-external-link"></i></a>
+.footnote[
+[1] *Cleveland and McGill, 1984 <a href="http://info.slis.indiana.edu/~katy/S637-S11/cleveland84.pdf"> <i class="fa fa-external-link"></i></a> and Heer and Bostok, 2010 <a href="http://vis.stanford.edu/files/2010-MTurk-CHI.pdf"> <i class="fa fa-external-link"></i></a>*
+]
 </small>
-
-
 
 
 ---
@@ -1008,52 +1119,182 @@ A reader is more likely to be confused by a 3D graph than a plain graph.
 ]
 
 ---
+# Visualizing High Density Data
+
+### Good...
+Add **transparency** (alpha). Easy and quick to implement: reveals underlying patterns but hides outliers and sparse data points.
+
+```{r, results='markup', fig.height = 3, fig.width = 11, out.width="980px", out.height="250px"}
+set.seed(123)
+n = 10000
+age <- rnorm(n, 30, 10) 
+value <- rnorm(n, 200, 25) 
+level <- factor(sample(c('high','low'), n, TRUE)) 
+metric <- 0.4*(level == 'low') + .045*(age-20) + (log(value - 10)-5.2)*(-2*(level == 'high') + 2*(value == 'low')) 
+df <- data.frame(age, value, level, metric)
+
+p0 <- ggplot(df, aes(value, metric, color = level)) + 
+  geom_point() +
+  scale_color_viridis_d() +
+  labs(title = "No Transparency") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10) +
+  theme(title = element_text(size = 12)) +
+  theme(legend.position = "none")
+
+
+p1 <- ggplot(df, aes(value, metric, color = level)) + 
+  geom_point(alpha = 0.8) +
+  scale_color_viridis_d() +
+  labs(title = "Transparency=0.8") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10)+
+  theme(title = element_text(size = 12)) +
+  theme(legend.position = "none")
+
+
+
+p3 <- ggplot(df, aes(value, metric, color = level)) + 
+  geom_point(alpha = 0.4) +
+  scale_color_viridis_d() +
+  labs(title = "Transparency=0.4") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10)+
+  theme(title = element_text(size = 12)) +
+  theme(legend.position = "none")
+
+
+
+p5 <- ggplot(df, aes(value, metric, color = level)) + 
+  geom_point(alpha = 0.05) +
+  scale_color_viridis_d() +
+  labs(title = "Transparency=0.05") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10)+
+  theme(title = element_text(size = 12)) +
+  theme(legend.position = "none")
+
+
+p0+p1+p3+p5 + plot_layout(ncol = 4)
+
+```
+
+---
+
+# Visualizing High Density Data
+
+### Better...
+Use **binning techniques** for high density data (they've been around since the mid 80's!). A little harder to read, but won't miss outliers and sparse data.
+
+
+```{r, results='markup', fig.height = 4, fig.width = 11, out.width="980px", out.height="350px"}
+g1<- ggplot(df, aes(value, metric, color = level)) + 
+  stat_binhex(alpha = 0.8) +
+  scale_fill_viridis_c() +
+  labs(title = "Hexagonal Binning") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10)+
+  theme(title = element_text(size = 12))
+
+p0+g1
+```
+
+---
+
+# Visualizing High Density Data
+
+### Best...
+**Critically assess** whether you need BIG data in the first place: unless outliers are the main focus of analysis, it's often satisfactory to **sample** the data.
+
+```{r, results='markup', fig.height = 2.5, fig.width = 2.8, out.width="300px", out.height="280px"}
+set.seed(123)
+ggplot(sample_n(df, 400), aes(value, metric, color = level)) + 
+  geom_point(alpha = 0.8) +
+  scale_color_viridis_d() +
+  labs(title = "Random Sample") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 10) +
+  theme(title = element_text(size = 12)) +
+  theme(legend.position = "none")
+
+```
+
+
+<small>
+.footnote[
+[1] *If you are unconvinced, ask yourself: do I really have the whole population despite a huge dataset? Big data provides no protection against bias <a href="https://www.e-publications.org/ims/submission/AOAS/user/submissionFile/34436?confirm=7e3fbb22"> <i class="fa fa-external-link"></i></a>*
+]
+</small>
+
+---
+
+# Visualizing Changes Over Time
+
+.pull-left[
+<img src="Figures/timechange.png" width="540px">
+]
+
+.pull-right[
+* Works well when the data is not huge. 
+* Best if stratified.
+* x-axis needs not be time, but best if ordinal.
+]
+
+<small>
+.footnote[
+[1] *Harrell, 2017 <a href="http://www.fharrell.com/doc/bbr.pdf"> <i class="fa fa-external-link"></i></a>*
+]
+</small>
+---
+
+
+# Choosing Appropriate Color
+Choice of color is often subject to "*misguided artistry*". There are numerous empirically validated color scales, so the analyst's job is made significantly easier. 
+.pull-left[
+<img src="Figures/colorbrewer.png" width="450px">
+]
+
+
+
+.pull-right[
+<img src="Figures/colorerror.png" width="280px">
+<br>
+<small><small>
+*...finally, we confirmed that a rainbow colormap (jet) does indeed perform the worst overall in terms of both time and error, and should be jettisoned.*
+</small></small>
+]
+
+
+<small><small>
+.footnote[
+[1] *Brewer. Colorbrewer 2.0: Color Advice for Cartography <a href="http://colorbrewer2.org/"> <i class="fa fa-external-link"></i></a>*  
+[2] *Liu, Heer. Somewhere Over the Rainbow: An Empirical Assessment of Quantitative Colormaps. 2018 <a href="https://idl.cs.washington.edu/files/2018-QuantitativeColor-CHI.pdf"> <i class="fa fa-external-link"></i></a>*
+</small></small>
+]
+
+---
+
+# Show the Uncertainty
+We need to visualize the uncertainty in order to make optimal decisions.
+
+.pull-left[
+<br>
+<img src="Figures/jobnumbers.gif" width="500px">
+]
+
+.pull-right[
+<img src="Figures/uncertainty.png" width="500px">
+]
+
+
+<small>
+.footnote[
+[1] *New York Times. How Not to Be Misled by the Jobs Report, 2014 <a href="https://www.nytimes.com/2014/05/02/upshot/how-not-to-be-misled-by-the-jobs-report.html"> <i class="fa fa-external-link"></i></a>*  
+[2] *Chato Osio and Hamon. 2017 <a href="http://www.flr-project.org/doc/ggplotFL_plotting_FLR_objects_with_ggplot2.html"> <i class="fa fa-external-link"></i></a>*
+
+]
+</small>
+
+---
 class: center, middle
 
 <img src="Figures/choosing-a-good-chart1.png" width="880px">
 
 
----
-class: inverse, center, middle
-
-```{r, results='markup', cache = TRUE}
-##----------------------------------------------------------------------------------------------------------------------
-## PREPARED DATA
-##----------------------------------------------------------------------------------------------------------------------
-load("Data/lochistory.RData")
-
-##----------------------------------------------------------------------------------------------------------------------
-## FILTER
-##----------------------------------------------------------------------------------------------------------------------
-loc.2016 <- loc %>%
-  mutate(year = year(time),
-         month = month(time)) %>%
-  filter(year==2016) %>%
-  filter(month %in% c(4, 6, 8)) %>%
-  arrange(time) %>%
-  dplyr::select(time, lat, lon, activitys, velocity, altitude, heading)
-
-##----------------------------------------------------------------------------------------------------------------------
-## VELOCITY
-##----------------------------------------------------------------------------------------------------------------------
-loc.2016.velocity <- filter(loc.2016, !is.na(velocity))
-loc.2016.velocity <- mutate(loc.2016.velocity, velocity.ln = log(velocity))
-loc.2016.velocity <- mutate(loc.2016.velocity, velocity.p = as.factor(ntile(velocity, 10)))
-
-pal <- colorFactor(c("RdPu"), loc.2016.velocity$velocity.p)
-
-leaflet(data = loc.2016.velocity) %>%
-  setView(lng = -114.062019, lat = 51.044270, zoom = 10) %>%
-  addProviderTiles("CartoDB.DarkMatter") %>%
-  addProviderTiles("OpenMapSurfer.AdminBounds") %>%
-  addCircleMarkers(
-    radius = 6,
-    color = ~pal(velocity.p),
-    stroke = FALSE, fillOpacity = 0.8
-  ) %>%
-  addLegend(pal = pal, values = ~velocity.p, title = "Velocity (ranks) | Low to High", opacity = 0.9)
-
-```
 
 
 ---
@@ -1096,7 +1337,7 @@ In 2017, Boy et al. (1) conducted visual experiments on 284 particpants. They fo
 
 class: inverse, center, middle
 
-# 5. What to Look for in Visualization Tools? An Opinionated List
+# 7. What to Look for in Visualization Tools? An Opinionated List
 
 ---
 
@@ -1154,11 +1395,9 @@ Favour a **thorough qualitative evaluation**, ideally from a **pilot** rather th
 ---
 
 # What to Look for in Visualization Tools? An Opnionated List
-Remember Tufte: *Numbers become evidence by being in relation to*. Does the tool encourage comparisons? Does it make it easy?
+Remember Tufte: *Numbers become evidence by being in relation to*. Does the tool encourage comparisons? Does it make it easy? A simple test is to plot a stratified box-plot.
 
-A simple test: I could not create a similar graph in a popular visualization tool:
-
-```{r, results='markup', fig.height=5, fig.width=12}
+```{r, results='markup', fig.height=5, fig.width=10}
 ggplot(mpg, aes(class, hwy)) +
   geom_boxplot(fill = "grey90") +
   theme_minimal(base_family = "Roboto Condensed")
@@ -1179,7 +1418,7 @@ class: middle
 
 class: inverse, center, middle
 
-# 6. References
+# 8. References
 
 ---
 

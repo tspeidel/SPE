@@ -28,7 +28,7 @@ read.csv(fil, stringsAsFactors=FALSE) %>%
             country=sub("^PAKIST$", "PAKISTAN", country)) -> dat
 
 # doing this so we can order things by most irresponsible country to least
-count(dat, country) %>%
+dplyr::count(dat, country) %>%
      arrange(desc(n)) %>%
      mutate(country=factor(country, levels=unique(country))) -> booms
 
@@ -50,7 +50,7 @@ proj <- "+proj=kav7" # Winkel-Tripel is *so* 2015
 # bank account since I really like the detailed kerning pairs but also think
 # that it's just a tad too narrow. It seemed fitting for this vis, tho.
 
-theme_scary_world_map <- function(scary="#2B2C27", light="#8f8f8f") {
+theme_scary_world_map <- function(scary="#2B2C27", light="white") {
      theme_map() +
           theme(text=element_text(family="Roboto Condensed"),
                 title=element_text(family="Roboto Condensed"),
@@ -73,7 +73,7 @@ theme_scary_world_map <- function(scary="#2B2C27", light="#8f8f8f") {
 }
 
 # I wanted to see booms by unique coords
-count(dat, year, country, latitude, longitude) %>%
+dplyr::count(dat, year, country, latitude, longitude) %>%
      ungroup() %>%
      mutate(country=factor(country, levels=unique(booms$country))) -> dat_agg
 
@@ -96,7 +96,7 @@ suppressWarnings(walk(1:til, function(i) {
      tmp_dat <- filter(dat_agg, year<=years[i])
      
      # data for bars
-     count(tmp_dat, country, wt=n) %>%
+     dplyr::count(tmp_dat, country, wt=n) %>%
           arrange(desc(nn)) %>%
           mutate(country=factor(country, levels=unique(country))) %>%
           complete(country, fill=list(nn=0)) -> boom2 # this gets us all the countries on the barplot x-axis even if the had no booms yet
@@ -161,7 +161,7 @@ suppressWarnings(walk(1:til, function(i) {
      
      # dimensions arrived at via trial and error
      
-     png(sprintf("./booms/frame_%03d.png", i), width=639.5*2, height=544*2, res=144, bg=scary)
+     png(sprintf("./booms/frame_%03d.png", i), width=980*2.5, height=500*2, res=144, bg=scary)
      grid.arrange(gg_map, gg_bars, ncol=1, heights=c(0.85, 0.15), padding=unit(0, "null"), clip="on")
      dev.off()
      
