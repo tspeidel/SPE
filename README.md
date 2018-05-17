@@ -3,6 +3,8 @@
 Presentation for the May 17, 2018  SPE Calgary chapter meeting.
 Visualizations in the Analysis Workflow
 
+**If you are unsure where to go, you probably want [this](https://speidel-spe.updog.co).**
+
 ## Philosophy
 This presentation follows the spirit of reproducible research. The data and graphs are fully reproducible.
 R has been utilized 
