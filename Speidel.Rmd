@@ -177,7 +177,7 @@ To identify, understand, highlight features or relationships (helping the reader
 
 # To Persuade or to Inform?
 
-We **cannot** achieve both effectiviely at the same time!
+We **cannot** achieve both effectively at the same time!
 
 <center>
 
@@ -529,7 +529,6 @@ ggpairs(data   = blasingame,
      theme(axis.text.y = element_text(size = 10, family = "Roboto Condensed")) +
      theme(strip.text.x = element_text(size = 18)) +
      theme(strip.text.y = element_text(size = 18))
-
 
 ```
 
@@ -1024,7 +1023,7 @@ Smoothers are incredibly useful in order to highlight possible **trends** in the
 
 .pull-right[
 
-<iframe width="492" height="316" src="loess.mp4" frameborder="0" allowfullscreen></iframe> 
+<iframe width="492" height="316" src="Figures/loess.mp4" frameborder="0" allowfullscreen></iframe> 
 
 ]
 
@@ -1382,11 +1381,11 @@ Goal 2: *to summarize, communicate and engage (telling a story)*
 
 </small></small>
 
-Don't over-rely on IT advisory and consulting firms.
+Don't over-rely on IT advisory firms.
 
-When evaluating tools, **weighting** and **scoring** tend to be arbitrary and subjective. Scales are also arbitrary with little scientific basis. This usually results in poor choices. Weights are easy to manipulate in order to favour one tool over another. The resulting scoring matrices can be "*worse than useless, leading to worse-than-random decisions*"(1).
+When evaluating tools, **weighting** and **scoring** tend to be arbitrary and subjective. Scales are also arbitrary with little scientific basis. This usually results in poor choices. The resulting scoring matrices can be "*worse than useless, leading to worse-than-random decisions*"(1).
 
-Favour a **thorough qualitative evaluation**, ideally from a **pilot** rather than a pseudo-scientific scoring matrix. 
+Favour a **thorough qualitative evaluation**, ideally from a **pilot**. 
 
 
 <small>
@@ -1465,7 +1464,7 @@ alternative-stats.netlify.com <a href="http://alternative-stats.netlify.com"> <i
 <br>
 <small><small>
 
-*This presentation and most of the graphs were produced in [**R**](https://en.wikipedia.org/wiki/R_(programming_language)), a programming language and software <br> environment for statistical computing and graphics. The [Xaringan](https://slides.yihui.name/xaringan/#1) package was used for the presentation.*
+*This presentation and most of the graphs were produced in [**R**](https://en.wikipedia.org/wiki/R_(programming_language), a programming language and software <br> environment for statistical computing and graphics. The [Xaringan](https://slides.yihui.name/xaringan/#1) package was used for as the presentation template.*
 
 <img style="margin: 25px 20px 1px 1px;" src="Figures/Rlogo.png" width="10%">
 
